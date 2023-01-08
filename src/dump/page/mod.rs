@@ -39,6 +39,24 @@ impl<B: std::io::BufRead> PageIterator<B> {
     }
 }
 
+impl PageIterator<std::io::BufReader<std::process::ChildStdout>> {
+    pub fn from_path(path: &std::path::Path) -> PageIterator<impl std::io::BufRead> {
+        // This requires that the 7z command be installed and on the $PATH
+        // TODO: Replace unwraps
+        let file = std::process::Command::new("7z")
+            .arg("x")
+            .arg("-so")
+            .arg(path)
+            .stdout(std::process::Stdio::piped())
+            .spawn()
+            .unwrap()
+            .stdout
+            .unwrap();
+
+        PageIterator::from_reader(std::io::BufReader::new(file))
+    }
+}
+
 impl<B: std::io::BufRead> Iterator for PageIterator<B> {
     type Item = Page;
 

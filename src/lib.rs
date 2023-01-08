@@ -3,7 +3,7 @@
 //!
 
 pub mod dump;
-pub use dump::{DumpStore, Page, PageIterator, Revision};
+pub use dump::{Dump, DumpStore, Page, PageIterator, Revision};
 
 // #[cfg(test)]
 // mod tests {
