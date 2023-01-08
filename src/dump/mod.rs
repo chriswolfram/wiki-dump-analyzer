@@ -95,7 +95,7 @@ impl DumpStore {
             .iter()
             .filter(|d| page_ids.iter().any(|id| d.contains_page_id(*id)))
             .flat_map(|d| d.pages())
-            .filter(|p| page_ids.contains(&p.id))
+            .filter(|p| page_ids.contains(&p.id()))
             .collect()
     }
 
@@ -105,7 +105,7 @@ impl DumpStore {
             .iter()
             .filter(|d| d.contains_page_id(page_id))
             .flat_map(|d| d.pages())
-            .filter(|p| p.id == page_id)
+            .filter(|p| p.id() == page_id)
             .next()
     }
 }

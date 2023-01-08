@@ -4,23 +4,70 @@ use quick_xml::events::Event;
 /// A revision of a page on a wiki
 pub struct Revision {
     /// Revision ID.
-    pub id: i64,
+    id: i64,
     /// Contributor ID (if specified).
-    pub contributor_id: Option<i64>,
+    contributor_id: Option<i64>,
     /// Contributor username (if specified). A username might not be specified because the contributor was not logged in.
-    pub contributor_username: Option<String>,
+    contributor_username: Option<String>,
     /// Contributor IP address (if specified). The contributor's IP address is generally only included if they were not logged in.
-    pub contributor_ip: Option<String>,
+    contributor_ip: Option<String>,
     /// Parent revision's ID (if this revision has a parent).
-    pub parent_id: Option<i64>,
+    parent_id: Option<i64>,
     /// Time when the revision was created.
-    pub timestamp: DateTime<chrono::Utc>,
+    timestamp: DateTime<chrono::Utc>,
     /// Data model (usually 'wikitext', but not always).
-    pub model: String,
+    model: String,
     /// Data format (usually 'text/x-wiki', but not always).
-    pub format: String,
+    format: String,
     /// The body of the revision.
-    pub body: String,
+    body: String,
+}
+
+impl Revision {
+    /// Revision ID.
+    pub fn id(self: &Revision) -> i64 {
+        self.id
+    }
+
+    /// Contributor ID (if specified).
+    pub fn contributor_id(self: &Revision) -> Option<i64> {
+        self.contributor_id
+    }
+
+    /// Contributor username (if specified). A username might not be specified because the contributor was not logged in.
+    pub fn contributor_username(self: &Revision) -> Option<&String> {
+        (&self.contributor_username).as_ref()
+    }
+
+    /// Contributor IP address (if specified). The contributor's IP address is generally only included if they were not logged in.
+    pub fn contributor_ip(self: &Revision) -> Option<&String> {
+        (&self.contributor_ip).as_ref()
+    }
+
+    /// Parent revision's ID (if this revision has a parent).
+    pub fn parent_id(self: &Revision) -> Option<i64> {
+        self.parent_id
+    }
+
+    /// Time when the revision was created.
+    pub fn timestamp(self: &Revision) -> &DateTime<chrono::Utc> {
+        &self.timestamp
+    }
+
+    /// Data model (usually 'wikitext', but not always).
+    pub fn model(self: &Revision) -> &String {
+        &self.model
+    }
+
+    /// Data format (usually 'text/x-wiki', but not always).
+    pub fn format(self: &Revision) -> &String {
+        &self.format
+    }
+
+    /// The body of the revision.
+    pub fn body(self: &Revision) -> &String {
+        &self.body
+    }
 }
 
 impl std::fmt::Debug for Revision {

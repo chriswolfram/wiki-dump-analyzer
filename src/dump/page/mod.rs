@@ -4,14 +4,37 @@ pub use revision::Revision;
 /// A page on a wiki
 pub struct Page {
     /// Page ID.
-    pub id: i64,
+    id: i64,
     /// Namespace (on Wikipedia, 0 is for articles, 1 is talk pages, 2 is user pages, etc.)
     /// More information for Wikipedia available [here](https://en.wikipedia.org/wiki/Wikipedia:Namespace).
-    pub namespace: i64,
+    namespace: i64,
     /// Page title.
-    pub title: String,
+    title: String,
     /// Page revisions.
-    pub revisions: Vec<Revision>,
+    revisions: Vec<Revision>,
+}
+
+impl Page {
+    /// Page ID.
+    pub fn id(self: &Page) -> i64 {
+        self.id
+    }
+
+    /// Namespace (on Wikipedia, 0 is for articles, 1 is talk pages, 2 is user pages, etc.)
+    /// More information for Wikipedia available [here](https://en.wikipedia.org/wiki/Wikipedia:Namespace).
+    pub fn namespace(self: &Page) -> i64 {
+        self.namespace
+    }
+
+    /// Page title.
+    pub fn title(self: &Page) -> &String {
+        &self.title
+    }
+
+    /// Page revisions.
+    pub fn revisions(self: &Page) -> &Vec<Revision> {
+        &&self.revisions
+    }
 }
 
 impl std::fmt::Debug for Page {
@@ -70,7 +93,7 @@ impl<B: std::io::BufRead> Iterator for PageIterator<B> {
 
         // In rare cases, revisions are not stored in the order of their timestamps. This
         // fixes those cases.
-        revisions.sort_by_cached_key(|rev| rev.timestamp);
+        revisions.sort_by_cached_key(|rev| rev.timestamp().timestamp());
 
         if rev_iter.page_id.is_none()
             || rev_iter.page_namespace.is_none()

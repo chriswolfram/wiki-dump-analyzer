@@ -21,7 +21,10 @@ fn main() {
         println!("Page: {:?}", p);
     }
 
-    println!("Target page: {:?}", dump_store.page_by_id(4648));
+    println!("Looking for page...");
+    let page = dump_store.page_by_id(42085878);
+    println!("Target page: {:?}", page);
+    println!("Revision times: {:?}", page.unwrap().revisions().iter().map(|r| r.timestamp().timestamp()).collect::<Vec<_>>());
 
     // dump_store.par_pages().for_each(|p| {
     //     println!("Page: {:?}", p);
