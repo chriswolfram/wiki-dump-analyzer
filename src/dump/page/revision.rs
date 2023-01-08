@@ -4,15 +4,15 @@ use quick_xml::events::Event;
 /// A revision of a page on a wiki
 pub struct Revision {
     /// Revision ID.
-    pub id: String,
+    pub id: i64,
     /// Contributor ID (if specified).
-    pub contributor_id: Option<String>,
+    pub contributor_id: Option<i64>,
     /// Contributor username (if specified). A username might not be specified because the contributor was not logged in.
     pub contributor_username: Option<String>,
     /// Contributor IP address (if specified). The contributor's IP address is generally only included if they were not logged in.
     pub contributor_ip: Option<String>,
     /// Parent revision's ID (if this revision has a parent).
-    pub parent_id: Option<String>,
+    pub parent_id: Option<i64>,
     /// Time when the revision was created.
     pub timestamp: DateTime<chrono::Utc>,
     /// Data model (usually 'wikitext', but not always).
@@ -35,8 +35,8 @@ pub struct RevisionIterator<'a, B: std::io::BufRead> {
     buf: Vec<u8>,
     last_page: bool,
 
-    pub page_id: Option<String>,
-    pub page_namespace: Option<String>,
+    pub page_id: Option<i64>,
+    pub page_namespace: Option<i64>,
     pub page_title: Option<String>,
 }
 
@@ -74,20 +74,22 @@ impl<'a, B: std::io::BufRead> Iterator for RevisionIterator<'a, B> {
                     Ok(Event::Start(ref e)) => match e.name() {
                         b"id" => {
                             if self.page_id.is_none() {
-                                self.page_id = Some(
-                                    self.xml_reader
-                                        .read_text(b"id", &mut self.buf)
-                                        .expect("No page ID"),
-                                );
+                                self.page_id = self
+                                    .xml_reader
+                                    .read_text(b"id", &mut self.buf)
+                                    .expect("No page ID")
+                                    .parse()
+                                    .ok();
                             }
                         }
                         b"ns" => {
                             if self.page_namespace.is_none() {
-                                self.page_namespace = Some(
-                                    self.xml_reader
-                                        .read_text(b"ns", &mut self.buf)
-                                        .expect("No namespace"),
-                                );
+                                self.page_namespace = self
+                                    .xml_reader
+                                    .read_text(b"ns", &mut self.buf)
+                                    .expect("No namespace")
+                                    .parse()
+                                    .ok();
                             }
                         }
                         b"title" => {
@@ -127,11 +129,11 @@ impl<'a, B: std::io::BufRead> Iterator for RevisionIterator<'a, B> {
                             let text = self.xml_reader.read_text(b"id", &mut self.buf);
                             if in_contributor {
                                 if contributor_id.is_none() {
-                                    contributor_id = Some(text.expect("No contributor ID"));
+                                    contributor_id = text.expect("No contributor ID").parse().ok();
                                 }
                             } else {
                                 if id.is_none() {
-                                    id = Some(text.expect("No ID"));
+                                    id = text.expect("No ID").parse().ok();
                                 }
                             }
                         }
@@ -155,11 +157,12 @@ impl<'a, B: std::io::BufRead> Iterator for RevisionIterator<'a, B> {
                         }
                         b"parentid" => {
                             if parent_id.is_none() {
-                                parent_id = Some(
-                                    self.xml_reader
-                                        .read_text(b"parentid", &mut self.buf)
-                                        .expect("No parent ID"),
-                                );
+                                parent_id = self
+                                    .xml_reader
+                                    .read_text(b"parentid", &mut self.buf)
+                                    .expect("No parent ID")
+                                    .parse()
+                                    .ok();
                             }
                         }
                         b"timestamp" => {

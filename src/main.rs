@@ -6,9 +6,9 @@ fn main() {
     ))
     .expect("Failed to create dump store.");
 
-    // Print paths in dump_store
-    for p in dump_store.dumps() {
-        println!("Path: {:?}", p);
+    // Print dumps in dump_store
+    for d in dump_store.dumps() {
+        println!("Dump: {:?}", d);
     }
 
     // Get a path from the dump_store
@@ -21,11 +21,9 @@ fn main() {
         println!("Page: {:?}", p);
     }
 
-    dump_store.pages().take(10).par_bridge().for_each(|p| {
-        println!("Page: {:?}", p);
-    });
+    println!("Target page: {:?}", dump_store.page_by_id(4648));
 
-    dump_store.par_pages().for_each(|p| {
-        println!("Page: {:?}", p);
-    });
+    // dump_store.par_pages().for_each(|p| {
+    //     println!("Page: {:?}", p);
+    // });
 }

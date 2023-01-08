@@ -4,10 +4,10 @@ pub use revision::Revision;
 /// A page on a wiki
 pub struct Page {
     /// Page ID.
-    pub id: String,
+    pub id: i64,
     /// Namespace (on Wikipedia, 0 is for articles, 1 is talk pages, 2 is user pages, etc.)
     /// More information for Wikipedia available [here](https://en.wikipedia.org/wiki/Wikipedia:Namespace).
-    pub namespace: String,
+    pub namespace: i64,
     /// Page title.
     pub title: String,
     /// Page revisions.
